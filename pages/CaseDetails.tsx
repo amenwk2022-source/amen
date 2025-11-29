@@ -387,16 +387,16 @@ const CaseDetails: React.FC = () => {
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6 print:shadow-none print:border-black print:border-b-2 print:rounded-none">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-                <span className="bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs font-mono border print:border-black">{caseData.caseNumber}</span>
-                {caseData.automaticNumber && <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono border print:border-black">آلي: {caseData.automaticNumber}</span>}
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+                <span className="bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs font-mono border print:border-black break-all">{caseData.caseNumber}</span>
+                {caseData.automaticNumber && <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono border print:border-black break-all">آلي: {caseData.automaticNumber}</span>}
                 <span className={`px-2 py-1 rounded text-xs font-semibold ${caseData.status === CaseStatus.Active ? 'bg-blue-100 text-blue-700' : caseData.status === CaseStatus.Execution ? 'bg-purple-100 text-purple-700' : caseData.status === CaseStatus.UnderFiling ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-700'} print:border print:border-black`}>
                     {caseData.status === CaseStatus.Active ? 'متداولة' : caseData.status === CaseStatus.Execution ? 'تنفيذ' : caseData.status === CaseStatus.UnderFiling ? 'تحت الرفع' : 'منتهية'}
                 </span>
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">{caseData.title}</h1>
-            <p className="text-gray-500 mt-1">الخصم: {caseData.opponentName}</p>
+            <h1 className="text-2xl font-bold text-slate-900 break-words">{caseData.title}</h1>
+            <p className="text-gray-500 mt-1 break-words">الخصم: {caseData.opponentName}</p>
           </div>
           
           <div className="flex flex-wrap gap-2 no-print">
@@ -459,11 +459,11 @@ const CaseDetails: React.FC = () => {
                     <div className="space-y-4">
                         <div className="flex justify-between border-b border-gray-50 pb-2">
                             <span className="text-gray-500">المحكمة</span>
-                            <span className="font-medium">{caseData.court}</span>
+                            <span className="font-medium break-words max-w-[60%] text-left">{caseData.court}</span>
                         </div>
                         <div className="flex justify-between border-b border-gray-50 pb-2">
                             <span className="text-gray-500">الدائرة</span>
-                            <span className="font-medium">{caseData.department}</span>
+                            <span className="font-medium break-words max-w-[60%] text-left">{caseData.department}</span>
                         </div>
                         <div className="flex justify-between border-b border-gray-50 pb-2">
                             <span className="text-gray-500">تاريخ الفتح</span>
@@ -471,7 +471,7 @@ const CaseDetails: React.FC = () => {
                         </div>
                         <div className="flex justify-between border-b border-gray-50 pb-2">
                             <span className="text-gray-500">الموكل</span>
-                            <button onClick={() => navigate(`/clients/${caseData.clientId}`)} className="font-medium text-amber-600 hover:underline">{client?.name}</button>
+                            <button onClick={() => navigate(`/clients/${caseData.clientId}`)} className="font-medium text-amber-600 hover:underline break-words">{client?.name}</button>
                         </div>
                     </div>
                 </div>
@@ -487,11 +487,11 @@ const CaseDetails: React.FC = () => {
                                     ${event.type === 'session' ? 'bg-amber-500' : event.type === 'execution' ? 'bg-purple-500' : event.type === 'payment' ? 'bg-green-500' : 'bg-blue-500'}`}>
                                 </div>
                                 <div className="flex justify-between items-start">
-                                    <div>
-                                        <p className="font-bold text-sm text-slate-800">{event.title}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5">{event.desc}</p>
+                                    <div className="flex-1 ml-2">
+                                        <p className="font-bold text-sm text-slate-800 break-words">{event.title}</p>
+                                        <p className="text-xs text-gray-500 mt-0.5 whitespace-pre-wrap break-words">{event.desc}</p>
                                     </div>
-                                    <span className="text-[10px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">{event.date}</span>
+                                    <span className="text-[10px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full whitespace-nowrap">{event.date}</span>
                                 </div>
                             </div>
                         ))}
@@ -523,13 +523,13 @@ const CaseDetails: React.FC = () => {
                 <div className="space-y-4">
                     {executions.map((exec) => (
                         <div key={exec.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors group">
-                            <div className="flex items-center gap-4">
-                                <button onClick={() => toggleExecutionStatus(exec)} className={`w-8 h-8 rounded-full flex items-center justify-center border ${exec.status === 'completed' ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-gray-300 text-gray-300'}`}>
+                            <div className="flex items-center gap-4 flex-1">
+                                <button onClick={() => toggleExecutionStatus(exec)} className={`w-8 h-8 rounded-full flex items-center justify-center border shrink-0 ${exec.status === 'completed' ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-gray-300 text-gray-300'}`}>
                                     <CheckSquare size={16} />
                                 </button>
                                 <div>
-                                    <h4 className={`font-bold ${exec.status === 'completed' ? 'text-gray-500 line-through' : 'text-slate-800'}`}>{exec.type}</h4>
-                                    <p className="text-sm text-gray-600">{exec.notes}</p>
+                                    <h4 className={`font-bold ${exec.status === 'completed' ? 'text-gray-500 line-through' : 'text-slate-800'} break-words`}>{exec.type}</h4>
+                                    <p className="text-sm text-gray-600 whitespace-pre-wrap break-words">{exec.notes}</p>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -562,10 +562,10 @@ const CaseDetails: React.FC = () => {
                             </div>
                             <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded bg-white border border-gray-100 shadow-sm print:w-full print:mb-4 print:border-black">
                                 <div className="flex justify-between items-start mb-2">
-                                    <span className="font-bold text-slate-900">{session.sessionType}</span>
+                                    <span className="font-bold text-slate-900 break-words">{session.sessionType}</span>
                                     <time className="font-mono text-xs text-slate-500">{session.sessionDate}</time>
                                 </div>
-                                <div className="text-sm text-gray-600 mb-2">{session.notes || 'لا توجد ملاحظات'}</div>
+                                <div className="text-sm text-gray-600 mb-2 whitespace-pre-wrap break-words">{session.notes || 'لا توجد ملاحظات'}</div>
                                 {session.status === SessionStatus.Upcoming && (
                                     <div className="flex gap-2 no-print">
                                         <button onClick={() => setSessionToMigrate(session)} className="text-xs bg-slate-900 text-white px-3 py-1.5 rounded">ترحيل الجلسة</button>
@@ -600,7 +600,7 @@ const CaseDetails: React.FC = () => {
                             <li key={p.id} className="flex justify-between items-center bg-green-50 p-3 rounded">
                                 <div>
                                     <span className="font-bold block">{p.amount.toLocaleString()}</span>
-                                    <span className="text-xs text-gray-500">{p.date} - {p.note}</span>
+                                    <span className="text-xs text-gray-500 break-words">{p.date} - {p.note}</span>
                                 </div>
                                 <button onClick={() => handleDeletePayment(p.id, p.amount)} className="text-gray-400 hover:text-red-500 no-print"><Trash2 size={14}/></button>
                             </li>
@@ -614,7 +614,7 @@ const CaseDetails: React.FC = () => {
                             <li key={e.id} className="flex justify-between items-center bg-red-50 p-3 rounded">
                                 <div>
                                     <span className="font-bold block">{e.amount.toLocaleString()}</span>
-                                    <span className="text-xs text-gray-500">{e.date} - {e.title}</span>
+                                    <span className="text-xs text-gray-500 break-words">{e.date} - {e.title}</span>
                                 </div>
                                 <button onClick={() => handleDeleteExpense(e.id)} className="text-gray-400 hover:text-red-500 no-print"><Trash2 size={14}/></button>
                             </li>
@@ -635,7 +635,7 @@ const CaseDetails: React.FC = () => {
                     <div key={t.id} className="flex justify-between items-center p-3 border rounded">
                         <div className="flex items-center gap-2">
                             <button onClick={() => toggleTask(t.id)}>{t.status === TaskStatus.Done ? <CheckSquare className="text-green-500"/> : <Square className="text-gray-300"/>}</button>
-                            <span className={t.status === TaskStatus.Done ? 'line-through text-gray-400' : ''}>{t.title}</span>
+                            <span className={`${t.status === TaskStatus.Done ? 'line-through text-gray-400' : ''} break-words`}>{t.title}</span>
                         </div>
                         <button onClick={() => handleDeleteTask(t.id)} className="text-gray-300 hover:text-red-500"><Trash2 size={14}/></button>
                     </div>
@@ -652,11 +652,11 @@ const CaseDetails: React.FC = () => {
              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {documents.map(d => (
                     <div key={d.id} className="border p-4 rounded flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                            <FileText className="text-red-500"/>
-                            <span className="truncate">{d.title}</span>
+                        <div className="flex items-center gap-2 overflow-hidden">
+                            <FileText className="text-red-500 shrink-0"/>
+                            <span className="truncate" title={d.title}>{d.title}</span>
                         </div>
-                        <button onClick={() => handleDeleteDocument(d.id)} className="text-gray-300 hover:text-red-500"><Trash2 size={14}/></button>
+                        <button onClick={() => handleDeleteDocument(d.id)} className="text-gray-300 hover:text-red-500 shrink-0"><Trash2 size={14}/></button>
                     </div>
                 ))}
              </div>

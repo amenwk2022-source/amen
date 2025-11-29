@@ -138,38 +138,41 @@ const Cases: React.FC = () => {
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-right">
+          <table className="w-full text-right table-fixed min-w-[900px]">
             <thead className="bg-slate-50 text-slate-600 font-medium">
               <tr>
-                <th className="p-4">رقم القضية</th>
-                <th className="p-4">العنوان</th>
-                <th className="p-4">الموكل</th>
-                <th className="p-4">الخصم</th>
-                <th className="p-4">المحكمة</th>
-                <th className="p-4">الحالة</th>
-                <th className="p-4"></th>
+                <th className="p-4 w-[15%]">رقم القضية</th>
+                <th className="p-4 w-[20%]">العنوان</th>
+                <th className="p-4 w-[15%]">الموكل</th>
+                <th className="p-4 w-[15%]">الخصم</th>
+                <th className="p-4 w-[15%]">المحكمة</th>
+                <th className="p-4 w-[10%]">الحالة</th>
+                <th className="p-4 w-[10%]"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredCases.map((c) => (
                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="p-4">
-                      <div className="font-medium text-slate-900">{c.caseNumber}</div>
-                      {c.automaticNumber && <div className="text-xs text-gray-500 mt-1">آلي: {c.automaticNumber}</div>}
+                  <td className="p-4 align-top">
+                      <div className="font-medium text-slate-900 break-all">{c.caseNumber}</div>
+                      {c.automaticNumber && <div className="text-xs text-gray-500 mt-1 break-all">آلي: {c.automaticNumber}</div>}
                   </td>
-                  <td className="p-4">{c.title}</td>
-                  <td className="p-4">{getClientName(c.clientId)}</td>
-                  <td className="p-4 text-gray-500">{c.opponentName}</td>
-                  <td className="p-4 text-sm">{c.court}</td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColors[c.status]}`}>
+                  <td className="p-4 align-top break-words">{c.title}</td>
+                  <td className="p-4 align-top break-words">{getClientName(c.clientId)}</td>
+                  <td className="p-4 text-gray-500 align-top break-words">{c.opponentName}</td>
+                  <td className="p-4 text-sm align-top break-words">
+                      <div>{c.court}</div>
+                      <div className="text-xs text-gray-400">{c.department}</div>
+                  </td>
+                  <td className="p-4 align-top">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold whitespace-nowrap ${statusColors[c.status]}`}>
                       {statusLabels[c.status]}
                     </span>
                   </td>
-                  <td className="p-4">
+                  <td className="p-4 align-top">
                     <Link 
                       to={`/cases/${c.id}`}
-                      className="text-amber-600 hover:text-amber-800 text-sm font-medium"
+                      className="text-amber-600 hover:text-amber-800 text-sm font-medium whitespace-nowrap"
                     >
                       عرض التفاصيل
                     </Link>

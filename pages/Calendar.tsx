@@ -95,23 +95,22 @@ const CalendarPage: React.FC = () => {
       {/* Printable Sheet */}
       <div 
         ref={sheetRef} 
-        className="bg-white p-10 rounded-none md:rounded-xl shadow-none md:shadow-lg border-0 md:border min-h-[1000px] print-sheet relative"
-        style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}
+        className="bg-white p-6 md:p-10 rounded-none md:rounded-xl shadow-none md:shadow-lg border-0 md:border min-h-[1000px] print-sheet relative"
+        style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}
       >
         {/* Formal Header */}
         <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
             <div className="text-right w-1/3">
-                <h2 className="text-lg font-bold">{settings.officeName}</h2>
+                <h2 className="text-lg font-bold break-words">{settings.officeName}</h2>
                 <p className="text-sm text-gray-600">للمحاماة والاستشارات القانونية</p>
-                <p className="text-sm text-gray-600">المحامي: {settings.lawyerName}</p>
+                <p className="text-sm text-gray-600 break-words">المحامي: {settings.lawyerName}</p>
             </div>
             
             <div className="text-center w-1/3 flex flex-col items-center justify-center">
-                 {/* Logo Placeholder - You can replace with <img src="..." /> if available */}
-                 <div className="w-20 h-20 border-2 border-slate-900 rounded-full flex items-center justify-center mb-2">
-                     <Gavel size={32} className="text-slate-900" />
+                 <div className="w-16 h-16 border-2 border-slate-900 rounded-full flex items-center justify-center mb-2">
+                     <Gavel size={28} className="text-slate-900" />
                  </div>
-                 <h1 className="text-2xl font-black text-slate-900 uppercase tracking-wide border-2 border-slate-900 px-4 py-1 mt-1 rounded">رول الجلسات</h1>
+                 <h1 className="text-xl font-black text-slate-900 uppercase tracking-wide border-2 border-slate-900 px-4 py-1 mt-1 rounded">رول الجلسات</h1>
             </div>
 
             <div className="text-left w-1/3">
@@ -124,16 +123,17 @@ const CalendarPage: React.FC = () => {
         </div>
 
         {sessions.length > 0 ? (
-            <table className="w-full text-right border-collapse border-2 border-slate-900">
+            <table className="w-full text-right border-collapse border-2 border-slate-900 table-fixed">
                 <thead>
                     <tr className="bg-slate-100 print:bg-slate-200 text-slate-900">
-                        <th className="border border-slate-900 p-3 w-12 text-center font-bold text-sm">م</th>
-                        <th className="border border-slate-900 p-3 w-32 font-bold text-sm">رقم القضية</th>
-                        <th className="border border-slate-900 p-3 font-bold text-sm">أطراف الدعوى</th>
-                        <th className="border border-slate-900 p-3 w-40 font-bold text-sm">المحكمة / الدائرة</th>
-                        <th className="border border-slate-900 p-3 font-bold text-sm">نوع الجلسة / المطلوب</th>
-                        <th className="border border-slate-900 p-3 w-32 font-bold text-sm">القرار / ما تم</th>
-                        <th className="border border-slate-900 p-3 w-24 font-bold text-sm">التأجيل</th>
+                        <th className="border border-slate-900 p-2 w-[5%] text-center font-bold text-xs">م</th>
+                        <th className="border border-slate-900 p-2 w-[15%] font-bold text-xs">المحكمة</th>
+                        <th className="border border-slate-900 p-2 w-[12%] font-bold text-xs">الدائرة</th>
+                        <th className="border border-slate-900 p-2 w-[10%] font-bold text-xs">رقم القضية</th>
+                        <th className="border border-slate-900 p-2 w-[15%] font-bold text-xs">الموكل</th>
+                        <th className="border border-slate-900 p-2 w-[15%] font-bold text-xs">الخصم</th>
+                        <th className="border border-slate-900 p-2 w-[13%] font-bold text-xs">نوع الجلسة / المطلوب</th>
+                        <th className="border border-slate-900 p-2 w-[15%] font-bold text-xs">ملاحظات / القرار</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -141,25 +141,19 @@ const CalendarPage: React.FC = () => {
                         const caseData = cases.find(c => c.id === session.caseId);
                         const clientName = db.getClients().find(c => c.id === caseData?.clientId)?.name;
                         return (
-                            <tr key={session.id} className="align-top">
-                                <td className="border border-slate-900 p-3 text-center font-bold">{index + 1}</td>
-                                <td className="border border-slate-900 p-3">
-                                    <div className="font-bold text-lg">{caseData?.caseNumber}</div>
+                            <tr key={session.id} className="align-middle">
+                                <td className="border border-slate-900 p-2 text-center font-bold text-xs align-top">{index + 1}</td>
+                                <td className="border border-slate-900 p-2 text-xs font-bold break-words align-top">{caseData?.court}</td>
+                                <td className="border border-slate-900 p-2 text-xs break-words align-top">{caseData?.department}</td>
+                                <td className="border border-slate-900 p-2 text-xs font-bold dir-ltr text-right align-top break-all">{caseData?.caseNumber}</td>
+                                <td className="border border-slate-900 p-2 text-xs break-words align-top">{clientName}</td>
+                                <td className="border border-slate-900 p-2 text-xs break-words align-top">{caseData?.opponentName}</td>
+                                <td className="border border-slate-900 p-2 text-xs align-top">
+                                    <span className="font-bold block mb-1 break-words">{session.sessionType}</span>
                                 </td>
-                                <td className="border border-slate-900 p-3 text-sm">
-                                    <div className="font-bold mb-1">ضد/ {caseData?.opponentName}</div>
-                                    <div className="text-gray-600 text-xs">الموكل: {clientName}</div>
+                                <td className="border border-slate-900 p-2 text-xs text-gray-600 align-top whitespace-pre-wrap break-words">
+                                    {session.notes}
                                 </td>
-                                <td className="border border-slate-900 p-3 text-sm">
-                                    <div className="font-bold">{caseData?.court}</div>
-                                    <div className="text-xs">{caseData?.department}</div>
-                                </td>
-                                <td className="border border-slate-900 p-3 text-sm">
-                                    <div className="font-bold mb-1">{session.sessionType}</div>
-                                    <div className="text-gray-500 text-xs">{session.notes}</div>
-                                </td>
-                                <td className="border border-slate-900 p-3"></td>
-                                <td className="border border-slate-900 p-3"></td>
                             </tr>
                         );
                     })}
@@ -173,12 +167,12 @@ const CalendarPage: React.FC = () => {
         
         {/* Footer */}
         <div className="mt-auto pt-12 flex justify-between text-sm print-only absolute bottom-10 left-10 right-10 border-t-2 border-slate-900">
-            <div className="text-right">
+            <div className="text-right w-1/2">
                 <p className="font-bold">المحامي / {settings.lawyerName}</p>
                 <p className="mt-8 text-xs text-gray-500">التوقيع ............................</p>
             </div>
-            <div className="text-left">
-                <p className="font-bold">{settings.printFooter}</p>
+            <div className="text-left w-1/2">
+                <p className="font-bold break-words">{settings.printFooter}</p>
             </div>
         </div>
       </div>

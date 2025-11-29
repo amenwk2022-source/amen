@@ -187,15 +187,15 @@ const ClientDetails: React.FC = () => {
             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 print:grid-cols-3">
                 <div className="flex items-center gap-3 text-gray-600">
                     <Phone className="text-slate-400 print:text-black" size={20} />
-                    <span className="font-medium text-slate-800">{client.phone}</span>
+                    <span className="font-medium text-slate-800 break-words">{client.phone}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
                     <Mail className="text-slate-400 print:text-black" size={20} />
-                    <span className="font-medium text-slate-800">{client.email || 'لا يوجد بريد إلكتروني'}</span>
+                    <span className="font-medium text-slate-800 break-words">{client.email || 'لا يوجد بريد إلكتروني'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
                     <MapPin className="text-slate-400 print:text-black" size={20} />
-                    <span className="font-medium text-slate-800">{client.address || 'لا يوجد عنوان مسجل'}</span>
+                    <span className="font-medium text-slate-800 break-words">{client.address || 'لا يوجد عنوان مسجل'}</span>
                 </div>
             </div>
         </div>
@@ -254,9 +254,9 @@ const ClientDetails: React.FC = () => {
                 <tbody className="divide-y divide-gray-100 print:divide-black">
                     {clientCases.map(c => (
                         <tr key={c.id} className="hover:bg-gray-50">
-                            <td className="p-4 font-bold text-slate-800">{c.caseNumber}</td>
-                            <td className="p-4">{c.title}</td>
-                            <td className="p-4 text-gray-500">{c.opponentName}</td>
+                            <td className="p-4 font-bold text-slate-800 break-words">{c.caseNumber}</td>
+                            <td className="p-4 break-words">{c.title}</td>
+                            <td className="p-4 text-gray-500 break-words">{c.opponentName}</td>
                             <td className="p-4">
                                 <span className={`px-2 py-1 rounded text-xs font-semibold ${c.status === 'active' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'} print:border print:border-black`}>
                                     {c.status}
@@ -304,7 +304,7 @@ const ClientDetails: React.FC = () => {
                             {consultations.map(c => (
                                 <tr key={c.id} className="hover:bg-gray-50">
                                     <td className="p-4 font-bold text-slate-800">{c.date}</td>
-                                    <td className="p-4">{c.topic}</td>
+                                    <td className="p-4 break-words">{c.topic}</td>
                                     <td className="p-4 text-slate-800">{c.price.toLocaleString()}</td>
                                     <td className="p-4">
                                         {c.isPaid ? 
