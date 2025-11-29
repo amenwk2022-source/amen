@@ -1,0 +1,5 @@
+{
+  "name": "Smart Lawyer System",
+  "description": "A comprehensive law office management system supporting Arabic (RTL), case management, session tracking, and automated task handling.",
+  "requestFramePermissions": []
+}
