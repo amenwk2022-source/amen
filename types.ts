@@ -111,6 +111,15 @@ export interface Consultation {
   notes: string;
 }
 
+export interface ExecutionProcedure {
+  id: string;
+  caseId: string;
+  type: string; // e.g. 'قرار 34', 'قرار 46', 'حبس'
+  date: string;
+  status: 'pending' | 'completed' | 'rejected';
+  notes: string;
+}
+
 export interface AppSettings {
   officeName: string;
   lawyerName: string;

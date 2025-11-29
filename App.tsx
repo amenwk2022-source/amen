@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import Help from './pages/Help';
 import Consultations from './pages/Consultations';
 import AIAssistant from './pages/AIAssistant';
+import Execution from './pages/Execution';
 import { authService } from './services/auth';
 
 // Protected Route Component
@@ -52,6 +53,12 @@ function App() {
           <Route path="/cases/:id" element={
             <ProtectedRoute>
               <CaseDetails />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/execution" element={
+            <ProtectedRoute>
+              <Execution />
             </ProtectedRoute>
           } />
           

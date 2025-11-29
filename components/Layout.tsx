@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Briefcase, Users, Calendar, CheckSquare, Menu, X, Gavel, Settings, TrendingUp, Search, Bell, LogOut, Clock, HelpCircle, MessageSquare, Bot } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Users, Calendar, CheckSquare, Menu, X, Gavel, Settings, TrendingUp, Search, Bell, LogOut, Clock, HelpCircle, MessageSquare, Bot, ShieldAlert } from 'lucide-react';
 import { db } from '../services/db';
 import { authService } from '../services/auth';
 import { Case, Client, SessionStatus, TaskStatus } from '../types';
@@ -143,6 +143,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { icon: LayoutDashboard, label: 'لوحة التحكم', path: '/' },
     { icon: Bot, label: 'المساعد الذكي', path: '/ai-assistant' }, // New AI Item
     { icon: Briefcase, label: 'إدارة القضايا', path: '/cases' },
+    { icon: ShieldAlert, label: 'إدارة التنفيذ', path: '/execution' }, // Execution
     { icon: MessageSquare, label: 'الاستشارات', path: '/consultations' },
     { icon: Users, label: 'الموكلين', path: '/clients' },
     { icon: Calendar, label: 'رول الجلسات', path: '/calendar' },

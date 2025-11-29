@@ -1,5 +1,5 @@
 
-import { Client, Case, Session, Task, ClientType, CaseStatus, SessionStatus, TaskPriority, TaskStatus, CaseDocument, Payment, CaseExpense, AppSettings, Consultation } from '../types';
+import { Client, Case, Session, Task, ClientType, CaseStatus, SessionStatus, TaskPriority, TaskStatus, CaseDocument, Payment, CaseExpense, AppSettings, Consultation, ExecutionProcedure } from '../types';
 
 // Initial Mock Data
 const INITIAL_CLIENTS: Client[] = [
@@ -40,6 +40,8 @@ const INITIAL_EXPENSES: CaseExpense[] = [
 const INITIAL_CONSULTATIONS: Consultation[] = [
   { id: 'c1', clientId: '2', date: '2023-10-15', topic: 'استشارة في عقد عمل', price: 500, isPaid: true, notes: 'تم مراجعة العقد وإبداء الملاحظات' }
 ];
+
+const INITIAL_EXECUTIONS: ExecutionProcedure[] = [];
 
 const INITIAL_SETTINGS: AppSettings = {
   officeName: 'مكتب المحامي الذكي',
@@ -149,6 +151,18 @@ class DBService {
     const list = this.getConsultations().filter(c => c.id !== id);
     this.set('consultations', list);
   }
+  
+  // Execution Procedures
+  getExecutions(): ExecutionProcedure[] { return this.get('executions', INITIAL_EXECUTIONS); }
+  addExecution(exec: ExecutionProcedure) { const list = this.getExecutions(); list.push(exec); this.set('executions', list); }
+  updateExecution(updated: ExecutionProcedure) {
+    const list = this.getExecutions().map(e => e.id === updated.id ? updated : e);
+    this.set('executions', list);
+  }
+  deleteExecution(id: string) {
+    const list = this.getExecutions().filter(e => e.id !== id);
+    this.set('executions', list);
+  }
 
   // Settings
   getSettings(): AppSettings { return this.get('settings', INITIAL_SETTINGS); }
@@ -165,6 +179,7 @@ class DBService {
       payments: this.getPayments(),
       expenses: this.getExpenses(),
       consultations: this.getConsultations(),
+      executions: this.getExecutions(),
       settings: this.getSettings(),
       exportDate: new Date().toISOString()
     };
@@ -182,6 +197,7 @@ class DBService {
       if (data.payments) localStorage.setItem('payments', JSON.stringify(data.payments));
       if (data.expenses) localStorage.setItem('expenses', JSON.stringify(data.expenses));
       if (data.consultations) localStorage.setItem('consultations', JSON.stringify(data.consultations));
+      if (data.executions) localStorage.setItem('executions', JSON.stringify(data.executions));
       if (data.settings) localStorage.setItem('settings', JSON.stringify(data.settings));
       this.notifyUpdate();
       return true;
