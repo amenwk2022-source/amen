@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { db } from '../services/db';
 import { Printer, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -54,14 +55,15 @@ const CalendarPage: React.FC = () => {
             <table className="w-full text-right border-collapse border border-black">
                 <thead>
                     <tr className="bg-gray-100 print:bg-gray-200">
-                        <th className="border border-black p-3 w-16 text-center">م</th>
-                        <th className="border border-black p-3">رقم الدعوى</th>
+                        <th className="border border-black p-3 w-12 text-center">م</th>
+                        <th className="border border-black p-3 w-24">رقم القضية</th>
+                        <th className="border border-black p-3 w-28">الرقم الآلي</th>
                         <th className="border border-black p-3">الموكل</th>
                         <th className="border border-black p-3">الخصم</th>
                         <th className="border border-black p-3">المحكمة / الدائرة</th>
                         <th className="border border-black p-3">المطلوب (القرار السابق)</th>
-                        <th className="border border-black p-3 w-32">ما تم بالجلسة</th>
-                        <th className="border border-black p-3 w-24">التأجيل</th>
+                        <th className="border border-black p-3 w-24">ما تم بالجلسة</th>
+                        <th className="border border-black p-3 w-20">التأجيل</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,6 +74,7 @@ const CalendarPage: React.FC = () => {
                             <tr key={session.id}>
                                 <td className="border border-black p-3 text-center">{index + 1}</td>
                                 <td className="border border-black p-3 font-bold">{caseData?.caseNumber}</td>
+                                <td className="border border-black p-3 text-sm">{caseData?.automaticNumber || '-'}</td>
                                 <td className="border border-black p-3">{clientName}</td>
                                 <td className="border border-black p-3">{caseData?.opponentName}</td>
                                 <td className="border border-black p-3 text-sm">

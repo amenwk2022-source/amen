@@ -22,6 +22,7 @@ const Cases: React.FC = () => {
   const filteredCases = cases.filter(c => {
     const matchesSearch = 
       c.caseNumber.includes(searchTerm) || 
+      (c.automaticNumber && c.automaticNumber.includes(searchTerm)) ||
       c.title.includes(searchTerm) || 
       getClientName(c.clientId).includes(searchTerm);
     const matchesStatus = filterStatus === 'all' || c.status === filterStatus;
@@ -29,10 +30,10 @@ const Cases: React.FC = () => {
   });
 
   const handleExportCSV = () => {
-    const headers = "رقم القضية,العنوان,الموكل,الخصم,المحكمة,الدائرة,الحالة,تاريخ الفتح,قيمة العقد,المدفوع\n";
+    const headers = "رقم القضية,الرقم الآلي,العنوان,الموكل,الخصم,المحكمة,الدائرة,الحالة,تاريخ الفتح,قيمة العقد,المدفوع\n";
     const rows = filteredCases.map(c => {
       const clientName = getClientName(c.clientId);
-      return `"${c.caseNumber}","${c.title}","${clientName}","${c.opponentName}","${c.court}","${c.department}","${c.status}","${c.openedDate}","${c.financialTotal}","${c.financialPaid}"`;
+      return `"${c.caseNumber}","${c.automaticNumber || ''}","${c.title}","${clientName}","${c.opponentName}","${c.court}","${c.department}","${c.status}","${c.openedDate}","${c.financialTotal}","${c.financialPaid}"`;
     }).join("\n");
 
     const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers + rows;
@@ -52,6 +53,7 @@ const Cases: React.FC = () => {
     const newCase: Case = {
       id: Date.now().toString(),
       caseNumber: formData.get('caseNumber') as string,
+      automaticNumber: formData.get('automaticNumber') as string,
       title: formData.get('title') as string,
       clientId: formData.get('clientId') as string,
       opponentName: formData.get('opponentName') as string,
@@ -111,7 +113,7 @@ const Cases: React.FC = () => {
           <Search className="absolute right-3 top-2.5 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="بحث برقم القضية، العنوان، أو الموكل..."
+            placeholder="بحث برقم القضية، الرقم الآلي، العنوان..."
             className="w-full pr-10 pl-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -151,7 +153,10 @@ const Cases: React.FC = () => {
             <tbody className="divide-y divide-gray-100">
               {filteredCases.map((c) => (
                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="p-4 font-medium text-slate-900">{c.caseNumber}</td>
+                  <td className="p-4">
+                      <div className="font-medium text-slate-900">{c.caseNumber}</div>
+                      {c.automaticNumber && <div className="text-xs text-gray-500 mt-1">آلي: {c.automaticNumber}</div>}
+                  </td>
                   <td className="p-4">{c.title}</td>
                   <td className="p-4">{getClientName(c.clientId)}</td>
                   <td className="p-4 text-gray-500">{c.opponentName}</td>
@@ -199,8 +204,12 @@ const Cases: React.FC = () => {
                 <input required name="title" className="w-full border rounded-lg p-2" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">رقم القضية</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">رقم ملف المكتب</label>
                 <input required name="caseNumber" className="w-full border rounded-lg p-2" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">الرقم الآلي (المحكمة)</label>
+                <input name="automaticNumber" className="w-full border rounded-lg p-2" placeholder="اختياري" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">الموكل</label>

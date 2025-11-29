@@ -23,7 +23,8 @@ export enum CaseStatus {
 
 export interface Case {
   id: string;
-  caseNumber: string;
+  caseNumber: string; // رقم ملف المكتب
+  automaticNumber?: string; // الرقم الآلي للمحكمة
   title: string;
   clientId: string;
   opponentName: string;

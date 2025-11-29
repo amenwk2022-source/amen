@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
 import { db } from '../services/db';
 import { Case, Session, SessionStatus, CaseStatus, CaseDocument, Task, TaskStatus, TaskPriority, Payment, CaseExpense, Client } from '../types';
-import { Calendar, FileText, DollarSign, Gavel, CheckCircle, AlertCircle, ArrowRight, Download, Upload, Plus, Edit2, Timer, Printer, CheckSquare, Square, User, Trash2, X, AlertTriangle, TrendingDown, Clock, Activity, MessageCircle, Sparkles, Loader2, Bot } from 'lucide-react';
+import { Calendar, FileText, DollarSign, Gavel, CheckCircle, AlertCircle, ArrowRight, Download, Upload, Plus, Edit2, Timer, Printer, CheckSquare, Square, User, Trash2, X, AlertTriangle, TrendingDown, Clock, Activity, MessageCircle, Sparkles, Loader2, Bot, PlayCircle } from 'lucide-react';
 
 const CaseDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +27,7 @@ const CaseDetails: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showJudgmentModal, setShowJudgmentModal] = useState(false);
+  const [showAddSessionModal, setShowAddSessionModal] = useState(false);
   
   // AI Analysis State
   const [showAIModal, setShowAIModal] = useState(false);
@@ -77,11 +78,41 @@ const CaseDetails: React.FC = () => {
     }
   };
 
+  // --- Actions ---
+
+  const handleActivateCase = () => {
+      if(confirm('هل تم قيد الدعوى في المحكمة رسمياً؟ سيتم تغيير الحالة إلى "متداولة" لتتمكن من إضافة الجلسات.')) {
+          const updated: Case = { ...caseData, status: CaseStatus.Active };
+          db.updateCase(updated);
+          setCaseData(updated);
+          alert('تم تفعيل القضية بنجاح! يمكنك الآن إضافة الجلسات.');
+      }
+  };
+
   const handleDeleteSession = (sessionId: string) => {
     if(confirm('حذف هذه الجلسة؟')) {
       db.deleteSession(sessionId);
       refreshData();
     }
+  };
+
+  const handleAddSession = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    
+    const newSession: Session = {
+        id: Date.now().toString(),
+        caseId: caseData.id,
+        sessionDate: fd.get('sessionDate') as string,
+        sessionType: fd.get('sessionType') as string,
+        judgeName: fd.get('judgeName') as string,
+        notes: fd.get('notes') as string,
+        status: SessionStatus.Upcoming
+    };
+    
+    db.addSession(newSession);
+    refreshData();
+    setShowAddSessionModal(false);
   };
 
   const handleEditSessionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -318,6 +349,7 @@ const CaseDetails: React.FC = () => {
         ...caseData,
         title: fd.get('title') as string,
         caseNumber: fd.get('caseNumber') as string,
+        automaticNumber: fd.get('automaticNumber') as string,
         opponentName: fd.get('opponentName') as string,
         court: fd.get('court') as string,
         department: fd.get('department') as string,
@@ -488,8 +520,9 @@ const CaseDetails: React.FC = () => {
           <div>
             <div className="flex items-center gap-3 mb-2">
                 <span className="bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs font-mono border print:border-black">{caseData.caseNumber}</span>
-                <span className={`px-2 py-1 rounded text-xs font-semibold ${caseData.status === CaseStatus.Active ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'} print:border print:border-black`}>
-                    {caseData.status === CaseStatus.Active ? 'متداولة' : 'منتهية'}
+                {caseData.automaticNumber && <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono border print:border-black">آلي: {caseData.automaticNumber}</span>}
+                <span className={`px-2 py-1 rounded text-xs font-semibold ${caseData.status === CaseStatus.Active ? 'bg-blue-100 text-blue-700' : caseData.status === CaseStatus.UnderFiling ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-700'} print:border print:border-black`}>
+                    {caseData.status === CaseStatus.Active ? 'متداولة' : caseData.status === CaseStatus.UnderFiling ? 'تحت الرفع' : caseData.status === CaseStatus.Execution ? 'تنفيذ' : 'منتهية'}
                 </span>
             </div>
             <h1 className="text-2xl font-bold text-slate-900">{caseData.title}</h1>
@@ -497,6 +530,16 @@ const CaseDetails: React.FC = () => {
           </div>
           
           <div className="flex flex-wrap gap-2 no-print">
+            {caseData.status === CaseStatus.UnderFiling && (
+                <button 
+                    onClick={handleActivateCase}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 animate-pulse"
+                >
+                    <PlayCircle size={18} />
+                    تم رفع الدعوى (تفعيل)
+                </button>
+            )}
+
             <button 
                 onClick={handleAnalyzeCase}
                 className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm"
@@ -630,6 +673,10 @@ const CaseDetails: React.FC = () => {
              <div className="print:mt-8 print:pt-8 print:border-t">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="font-bold text-lg text-slate-800">تسلسل الجلسات</h3>
+                    <button onClick={() => setShowAddSessionModal(true)} className="flex items-center gap-2 text-sm bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-2 rounded-lg no-print">
+                        <Plus size={16} />
+                        إضافة جلسة
+                    </button>
                 </div>
                 <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent print:before:hidden">
                     {sessions.map((session) => (
@@ -963,6 +1010,42 @@ const CaseDetails: React.FC = () => {
         </div>
       )}
 
+      {/* Add Session Modal */}
+      {showAddSessionModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl w-full max-w-lg">
+                <div className="p-6 border-b flex justify-between items-center">
+                    <h2 className="text-xl font-bold">إضافة جلسة جديدة</h2>
+                    <button onClick={() => setShowAddSessionModal(false)}><X className="text-gray-400" /></button>
+                </div>
+                <form onSubmit={handleAddSession} className="p-6 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">تاريخ الجلسة</label>
+                            <input type="date" name="sessionDate" required className="w-full border rounded-lg p-2" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">نوع الجلسة</label>
+                            <input name="sessionType" placeholder="مثال: جلسة نظر الدعوى" required className="w-full border rounded-lg p-2" />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">القاضي / الدائرة</label>
+                        <input name="judgeName" className="w-full border rounded-lg p-2" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">ملاحظات مبدئية</label>
+                        <textarea name="notes" rows={2} className="w-full border rounded-lg p-2"></textarea>
+                    </div>
+
+                    <div className="flex gap-3 mt-6">
+                        <button type="submit" className="flex-1 bg-slate-900 text-white py-2 rounded-lg hover:bg-slate-800">إضافة الجلسة</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      )}
+
       {/* Edit Case Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -976,8 +1059,12 @@ const CaseDetails: React.FC = () => {
                     <input required name="title" defaultValue={caseData.title} className="w-full border rounded-lg p-2" />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">رقم القضية</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">رقم ملف المكتب</label>
                     <input required name="caseNumber" defaultValue={caseData.caseNumber} className="w-full border rounded-lg p-2" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">الرقم الآلي (المحكمة)</label>
+                    <input name="automaticNumber" defaultValue={caseData.automaticNumber} className="w-full border rounded-lg p-2" placeholder="اختياري" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">اسم الخصم</label>

@@ -8,8 +8,8 @@ const INITIAL_CLIENTS: Client[] = [
 ];
 
 const INITIAL_CASES: Case[] = [
-  { id: '101', caseNumber: '4521/2023', title: 'دعوى تعويض عمالي', clientId: '2', opponentName: 'شركة البناء المحدودة', court: 'المحكمة العمالية', department: 'الدائرة الأولى', status: CaseStatus.Active, financialTotal: 15000, financialPaid: 5000, openedDate: '2023-11-01' },
-  { id: '102', caseNumber: '9822/2024', title: 'فسخ عقد توريد', clientId: '1', opponentName: 'مصنع الحديد', court: 'المحكمة التجارية', department: 'الدائرة التجارية الخامسة', status: CaseStatus.UnderFiling, financialTotal: 50000, financialPaid: 20000, openedDate: '2024-01-15' }
+  { id: '101', caseNumber: '4521/2023', automaticNumber: '445102394', title: 'دعوى تعويض عمالي', clientId: '2', opponentName: 'شركة البناء المحدودة', court: 'المحكمة العمالية', department: 'الدائرة الأولى', status: CaseStatus.Active, financialTotal: 15000, financialPaid: 5000, openedDate: '2023-11-01' },
+  { id: '102', caseNumber: '9822/2024', automaticNumber: '445291882', title: 'فسخ عقد توريد', clientId: '1', opponentName: 'مصنع الحديد', court: 'المحكمة التجارية', department: 'الدائرة التجارية الخامسة', status: CaseStatus.UnderFiling, financialTotal: 50000, financialPaid: 20000, openedDate: '2024-01-15' }
 ];
 
 const INITIAL_SESSIONS: Session[] = [
